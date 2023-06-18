@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "200333764758",
+    "firebase_url": "https://smartdoorlock-40077-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "smartdoorlock-40077",
+    "storage_bucket": "smartdoorlock-40077.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200333764758:android:8903bc96d31408823cfab7",
+        "android_client_info": {
+          "package_name": "com.example.trmase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "200333764758-bqm28so8o0ver8pb4oqkiomagv4ek7hj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNiavl3FpuCY3TnRBlQTAA1O0dvublT3o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "200333764758-bqm28so8o0ver8pb4oqkiomagv4ek7hj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
