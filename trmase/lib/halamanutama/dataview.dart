@@ -13,10 +13,11 @@ class DataView extends StatefulWidget {
 class _DataViewState extends State<DataView> {
   final ref = FirebaseDatabase.instance.ref('uid/history_log');
   final ref3 = FirebaseDatabase.instance.ref('uid/access');
-  late List<History> history;
+  var history;
+  late List registered;
   TextEditingController _textFieldController = TextEditingController();
 
-  void _TextFieldDialog() {
+  void _TextFieldDialog(String uidkartu) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -37,6 +38,7 @@ class _DataViewState extends State<DataView> {
             TextButton(
               onPressed: () {
                 String uid = _textFieldController.text;
+                ref3.child(uidkartu).set(uid);
                 print('UID yang dimasukkan: $uid');
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -54,9 +56,23 @@ class _DataViewState extends State<DataView> {
   @override
   void initState() {
     super.initState();
-    ref.onValue.listen((event) {
+    history = List.empty();
+    registered = List.empty();
+    ref3.onValue.listen(onEntryAdded_name);
+    ref.onValue.listen(onEntryAdded);
+  }
+
+  onEntryAdded(event) {
+    setState(() {
       history =
           event.snapshot.children.map((e) => History.fromSnapshot(e)).toList();
+    });
+  }
+
+  onEntryAdded_name(event) {
+    setState(() {
+      registered =
+          event.snapshot.children.map((e) => uid.fromSnapshot(e)).toList();
     });
   }
 
@@ -65,34 +81,36 @@ class _DataViewState extends State<DataView> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.outlineVariant,
       body: Column(children: [
-        Expanded(
-          child: FirebaseAnimatedList(
-            reverse: true,
-            query: ref,
-            itemBuilder: (context, snapshot, animation, index) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 3),
-                child: ListTile(
-                  onTap: () => _TextFieldDialog(),
-                  tileColor: Theme.of(context).colorScheme.background,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  title: Text(snapshot.child('UID').value.toString()),
-                  subtitle: Text(snapshot.child('time').value.toString()),
-                ),
-              );
-            },
-          ),
-        )
+        Expanded(child: Builder(builder: (context) {
+          if (history.length > 0) {
+            return ListView.builder(
+                itemCount: history.length,
+                itemBuilder: (context, i) {
+                  int ri = history.length - (i + 1);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      dense: true,
+                      tileColor: Theme.of(context).colorScheme.background,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                            color: Theme.of(context).colorScheme.tertiary),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      title: Text(history[ri].uid),
+                      subtitle: Text(history[ri].tanggal,
+                          style: Theme.of(context).textTheme.bodySmall),
+                      onTap: () {
+                        return _TextFieldDialog(history[ri].uid);
+                      },
+                    ),
+                  );
+                });
+          } else {
+            return CircularProgressIndicator();
+          }
+        }))
       ]),
     );
   }
-}
-
-class uid {
-  String key;
-  String nama;
-  uid(this.key, this.nama);
 }

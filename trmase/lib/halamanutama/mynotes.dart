@@ -15,6 +15,36 @@ class MyNotes extends StatefulWidget {
 class _MyNotesState extends State<MyNotes> {
   final ref2 = FirebaseDatabase.instance.ref('uid/access');
 
+  void _TextFieldDialog(String uidkartu) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Anda ingin menghapus user ini ?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () {
+                ref2.child(uidkartu).remove();
+                print('User dihapus');
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('User telah dihapus')),
+                );
+              },
+              child: Text('Hapus'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -120,6 +150,8 @@ class _MyNotesState extends State<MyNotes> {
                           padding:
                               EdgeInsets.symmetric(vertical: 8, horizontal: 3),
                           child: ListTile(
+                            onTap: () =>
+                                _TextFieldDialog(snapshot.key.toString()),
                             dense: true,
                             tileColor: Theme.of(context).colorScheme.background,
                             shape: RoundedRectangleBorder(

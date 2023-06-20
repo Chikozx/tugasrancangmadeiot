@@ -13,3 +13,12 @@ class History {
         uid = snapshot.child('UID').value as String,
         tanggal = snapshot.child('time').value as String;
 }
+
+class uid {
+  String key;
+  String nama;
+  uid(this.key, this.nama);
+  uid.fromSnapshot(DataSnapshot snapshot)
+      : key = snapshot.key as String,
+        nama = snapshot.value as String;
+}
